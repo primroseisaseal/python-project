@@ -1,0 +1,6 @@
+Batch number: 0
+Checked on [date and time]
+Total number of clocks: 39
+Number of clocks passing quality control (5-minute tolerance):22
+Batch quality: 56.41%
+Clocks to send back for readjustment:
