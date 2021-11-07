@@ -4,3 +4,20 @@ Total number of clocks: 39
 Number of clocks passing quality control (5-minute tolerance):22
 Batch quality: 56.41%
 Clocks to send back for readjustment:
+clock_16=6
+clock_10=6
+clock_35=6
+clock_18=6
+clock_6=7
+clock_8=8
+clock_23=9
+clock_4=9
+clock_0=9
+clock_31=10
+clock_24=10
+clock_38=12
+clock_22=18
+clock_36=22
+clock_34=27
+clock_30=30
+clock_26=30
