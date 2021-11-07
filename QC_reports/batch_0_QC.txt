@@ -1,14 +1,13 @@
 Batch number: 0
 Checked on [date and time]
 Total number of clocks: 39
-Number of clocks passing quality control (3-minute tolerance):15
-Batch quality: 38.46%
+Number of clocks passing quality control (3-minute tolerance):14
+Batch quality: 35.9%
 Clocks to send back for readjustment:
 clock_34=28min
-clock_27=28min
-clock_36=23min
-clock_30=22min
+clock_7=27min
 clock_22=19min
+clock_36=16min
 clock_38=12min
 clock_31=10min
 clock_24=10min
@@ -19,7 +18,9 @@ clock_6=8min
 clock_4=8min
 clock_0=8min
 clock_16=7min
+clock_30=7min
 clock_18=7min
+clock_27=7min
 clock_20=6min
 clock_10=5min
 clock_37=5min

@@ -6,8 +6,11 @@ Batch quality: 39.39%
 Clocks to send back for readjustment:
 clock_8=29min
 clock_26=29min
+clock_2=29min
 clock_3=26min
-clock_2=24min
+clock_0=25min
+clock_29=24min
+clock_4=19min
 clock_1=18min
 clock_11=17min
 clock_30=17min
@@ -17,10 +20,7 @@ clock_16=11min
 clock_10=11min
 clock_20=10min
 clock_32=10min
-clock_29=6min
-clock_4=5min
 clock_24=5min
 clock_28=4min
 clock_9=4min
 clock_12=4min
-clock_19=4min
