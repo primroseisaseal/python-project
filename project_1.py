@@ -74,7 +74,7 @@ plt.suptitle('Display .png file')
 
 #show seperated layers
 #How to plot multi-graph in 1 figure.
-    # Lines : 22-28 : matplotlib example
+    # Lines : 21-28 : matplotlib example
     # URL: https://matplotlib.org/stable/gallery/lines_bars_and_markers/categorical_variables.html#sphx-glr-gallery-lines-bars-and-markers-categorical-variables-py
     # Accessed on 1 Nov 2021.
 fig2, axs = plt.subplots(1, 3, figsize=(13, 4))
@@ -134,13 +134,13 @@ def get_clock_hands(clock_RGB):
     n = len(clock_RGB)
     for x in range (n): #x for row
         for y in range (n): #y for column
-            if clock_RGB[x][y][0] < clock_RGB[x][y][1] and  clock_RGB[x][y][2] < clock_RGB[x][y][1]:    #append each coordinate in the list, if the middle value (Green) is more than others.
+            if clock_RGB[x][y][1] >=0.7 and  clock_RGB[x][y][2] <= 0.6 and clock_RGB[x][y][0] <= 0.6 :  #append each coordinate in the list, if the middle value (Green) = 0.7 and others =0.6
                 min_list.append([x,y])
 
     hr_list = []        #create list array to store coordinates of hour hand. 
     for x in range (n): #x for row
         for y in range (n): #x for row
-            if clock_RGB[x][y][1] < clock_RGB[x][y][0] and  clock_RGB[x][y][2] < clock_RGB[x][y][0]:    #append each coordinate in the list, if the first value (Red) is more than others.
+            if  clock_RGB[x][y][1] <= 0.6 and  clock_RGB[x][y][2] <= 0.6 and clock_RGB[x][y][0] >= 0.7 :  #append each coordinate in the list, if the first value (Red) = 0.7 and others =0.6
                 hr_list.append([x,y])
     
     #store lists in arrays
@@ -151,6 +151,7 @@ def get_clock_hands(clock_RGB):
 
 test_task2 = plt.imread('testing/task2_7x7.png')
 print(get_clock_hands(test_task2))
+
 
     
 
@@ -190,6 +191,7 @@ print(get_clock_hands(test_task2))
 # With these coordinates, you should find an angle of approximately 4.2 radians for the hour hand, and 5.7 radians for the minute hand.
 
 # %%
+from scipy import stats     #import for using functions linregress
 hour_hand = np.loadtxt('testing/task3_hourhand.txt')
 minute_hand = np.loadtxt('testing/task3_minutehand.txt')
 
@@ -209,56 +211,69 @@ def get_angle(coords):
     #define x , y
     x = coords[:,1] #x increase when column increase
     y = coords[:,0] #y decrease wheb column decrease (will find liner regression line with -y)
-    
-    # find linear regression line of the clock hand
-        # Lines 24: Arun Ramji Shanmugam
-        # URL: https://medium.com/analytics-vidhya/simple-linear-regression-with-example-using-numpy-e7b984f0d15e
-        # Accessed on 1 Nov 2021.
-    slope, int_y = np.polyfit(x, -y, deg=1)
-    
-    # find an angle between the best fit line and x-axis (angle_x) by using arctan.
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, -y)  
     angle_x = np.arctan(slope)
     
+ 
     #sorted 2D array
-        # Lines : roippi
+        # Lines 29: roippi
         # URL: https://stackoverflow.com/questions/20183069/how-to-sort-multidimensional-array-by-column
         # Accessed on 6 Nov 2021.
     sorted_coords = sorted(coords, key=lambda x:abs(x[0]-50.)+abs(x[1]-50.), reverse=True)
     
     #find the centre point which is point that nearest to [50,50]
-        # Lines 31-32: Arun Ramji Shanmugam
+        # Lines 35: Arun Ramji Shanmugam
         # URL: https://stackoverflow.com/questions/43504443/find-closest-value-in-a-two-dimensional-array-with-python
         # Accessed on 1 Nov 2021.
     centre = min(sorted_coords, key=lambda x:abs(x[0]-50.)+abs(x[1]-50.))
     tip = sorted_coords[0]
     
+    #round the slope of liner regression
+    if np.isnan(slope) == True:     #Slope of vertical line is NaN so cannot be round 
+        slope = slope
+    else:
+        slope = round(slope,1)
+    
+
     #find which quadrant the input hand is in. Then adjust from angle_x to angle between the hand and 12 o'clock position(angle_y).
-    if np.absolute(tip[1]-centre[1])<=4:    #find the verticle hand by using the tip point of hand which have almost the same column as the centre point.
+    
+    if tip[1] == centre[1]:    #find the verticle hand by using the tip point of hand which have the same column as the centre point.
         if tip[0] <= centre[0]: #if the hand's row is less than centre's row, the angle_y = 0.
              angle_y = 0
         else:                   #if the hand's row is more than centre's row, the angle_y = pi rad.
             angle_y = np.pi
     
     elif tip[1]<centre[1]:      #The cases which the hand is on the left side of the centre point.
-        if np.absolute(tip[1]-centre[1])<=3: #when slope is aproximately equal to 0, angle_y = 3/2pi.
+        if slope == 0: #when slope is equal to 0, angle_y = 3/2pi.
             angle_y = np.pi*3/2
         if slope <0: #Quatile 4 : clo tip < col centre, slope < 0
             angle_y = np.pi*3/2 + np.absolute(angle_x)
         elif slope>0: #Quatile 3: clo tip < col centre, slope > 0
             angle_y = np.pi*3/2 - np.absolute(angle_x)
         
-    elif tip[1] > centre[1]:
-        if np.absolute(tip[1]-centre[1])<=3: #when slope is aproximately equal to 0, angle_y = 1/2pi.
+    elif tip[1] > centre[1]:    #The cases which the hand is on the right side of the centre point.
+        if slope == 0: #when slope is equal to 0, angle_y = 1/2pi.
             angle_y = np.pi/2
         if slope < 0: #Quatile 2: clo tip > col centre, slope < 0
             angle_y = np.pi/2 + np.absolute(angle_x)
         elif slope > 0: #Quatile 1: clo tip < col centre, slope > 0
             angle_y = np.pi/2 - np.absolute(angle_x)
-            
+
+
+
+
+ 
+
+
+
+ 
+
+          
     return angle_y
 
 print(get_angle(hour_hand))
 print(get_angle(minute_hand))
+
 
 
 
@@ -283,8 +298,19 @@ print(get_angle(minute_hand))
 
 
 def draw_clock(angle_hour,angle_minute):
+    '''
+    Return image of the clock
+
+    Input:
+        angle_hour (float): the angle between the hour hand and 12 o' clock position unit is radians.
+        angle_minute (float): the angle between the minute hand and 12 o' clock position unit is radians.
+    
+    Output:
+        image of the clock.
+    
+    '''
     #draw analog clock
-        # Lines 9-22: Yefeng Xia
+        # Lines 20-33: Yefeng Xia
         # URL: https://python.plainenglish.io/building-an-analog-clock-using-python-518922d57784
         # Accessed on 4 Nov 2021.
     angle_x_hour = angle_hour-np.pi/6
@@ -300,7 +326,7 @@ def draw_clock(angle_hour,angle_minute):
     ax.grid(False)
     plt.ylim(0,1)
     ax.plot([angle_x_hour,angle_x_hour], [0,0.5], color="darkblue", linewidth=2)
-    ax.plot([angle_x_minute,angle_x_minute], [0,0.9], color="black", linewidth=4)
+    ax.plot([angle_x_minute,angle_x_minute], [0,0.9], color="lightpink", linewidth=4)
 
 
     
@@ -339,18 +365,19 @@ def analog_to_digital(angle_hour, angle_minute):
         # Lines 18-19: Kite
         # URL: https://www.kite.com/python/answers/how-to-add-leading-zeros-to-a-number-in-python
         # Accessed on 4 Nov 2021.
-     hour = str(round(angle_hour*6/np.pi)).zfill(2)
+     hour = str(int(round(angle_hour*180/np.pi)*12/360)).zfill(2)
      minute = str(round(angle_minute*30 / np.pi)).zfill(2)
      #if the hour is 00 display 12
      if hour == '00':
-          hour = 12
+          hour = '12'
      else:
           hour = hour
      #create parametre called time to conclude hour and minute in formate hh:mm 
-     time = hour+':'+minute
+     time = hour+ ':' +minute
      return time
 
 print(analog_to_digital(np.pi/3,np.pi*11/6))
+
 
 # %% [markdown]
 # ---
