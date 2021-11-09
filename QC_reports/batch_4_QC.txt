@@ -1,5 +1,5 @@
 Batch number: 4
-Checked on [date and time]
+Checked on [date and time]: 2021-11-09, 10:51:54
 Total number of clocks: 30
 Number of clocks passing quality control (3-minute tolerance):9
 Batch quality: 30.0%
